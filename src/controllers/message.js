@@ -57,7 +57,6 @@ const getMessagesByIdClass = async (req, res = response) => {
 
 const createMessage = async (req, res = response) => {
     const { id_class, message, date } = req.body;
-    console.log(req);
 
     try {
         const newMessage = new Message({

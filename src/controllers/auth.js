@@ -107,4 +107,24 @@ const revalidateToken = async (req, res = response) => {
     })
 }
 
-module.exports = { createUser, login, revalidateToken }
+const getRoleById = async (userId) => {
+    try {
+        const user = await User.findOne({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        return user;
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: errorMessages.SERVER.GENERAL_ERROR,
+        });
+    }
+};
+
+module.exports = { createUser, login, revalidateToken, getRoleById  }

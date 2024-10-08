@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
+const Moderator = require('../models/Moderator');
 
 const ClassModel = sequelize.define('Class', {
     id: {
@@ -26,10 +27,6 @@ const ClassModel = sequelize.define('Class', {
     id_moderator: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'users', // Asegúrate de que este sea el nombre correcto de la tabla
-            key: 'id',
-        },
     },
     is_active: {
         type: DataTypes.BOOLEAN,
@@ -39,5 +36,7 @@ const ClassModel = sequelize.define('Class', {
     tableName: 'classes',
     timestamps: false,
 });
+
+ClassModel.belongsTo(Moderator, { foreignKey: 'id_moderator' });
 
 module.exports = ClassModel;

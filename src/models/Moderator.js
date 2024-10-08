@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } =  require('../database/config');
+const User = require('../models/User');
 
 const Moderator = sequelize.define('Moderator', {
     id: {
@@ -10,14 +11,12 @@ const Moderator = sequelize.define('Moderator', {
     id_user: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-    },
+    }
 }, {
     tableName: 'moderators',
     timestamps: false, 
 });
+
+Moderator.belongsTo(User, { foreignKey: 'id_user' });
 
 module.exports = Moderator;
