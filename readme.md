@@ -32,7 +32,7 @@ Este es el backend para la aplicación de clases virtuales en streaming. Proporc
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu_usuario/streaming-virtual-classes-backend.git
+   git clone https://github.com/ingestebancorrea/streaming-classes-back.git
 
 2. Navega al directorio del proyecto:
 cd streaming-virtual-classes-backend
