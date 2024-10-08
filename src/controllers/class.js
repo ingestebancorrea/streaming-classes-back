@@ -1,6 +1,6 @@
 const { response } = require('express');
 const ClassModel = require('../models/Class');
-const { errorMessages } = require('../common/errorMessage');
+const errorMessages = require('../common/errorMessage');
 
 const getClass = async (req, res = response) => {
     try {

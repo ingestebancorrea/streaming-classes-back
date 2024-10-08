@@ -1,18 +1,18 @@
 const express = require('express');
+const cors = require('cors');
+require('dotenv').config()
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require("./swagger.json");
-require('dotenv').config()
-const cors = require('cors');
 const { dbConnection } = require('./src/database/config');
 
 //Crear el servidor de express
 const app = express();
 
+// Use CORS middleware
+app.use(cors());
+
 // Base de datos
 dbConnection();
-
-//CORS
-app.use(cors());
 
 // Swagger setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -27,5 +27,5 @@ app.use('/api/messages', require('./src/routes/message'));
 
 //Escuchar peticiones
 app.listen( process.env.PORT, () => {
-    console.log(`Running on port ${ 3001 }`);
+    console.log(`Running on port ${ process.env.PORT }`);
 });

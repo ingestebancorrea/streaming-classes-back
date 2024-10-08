@@ -1,3 +1,4 @@
+const errorMessages = require('../common/errorMessage');
 const Moderator = require('../models/Moderator');
 
 const createModerator = async (data) => {
@@ -14,7 +15,10 @@ const createModerator = async (data) => {
         };
     } catch (error) {
         console.error(error);
-        throw new Error('Error while saving the moderator')
+        res.status(500).json({
+            ok: false,
+            msg: errorMessages.SERVER.GENERAL_ERROR,
+        });
     }
 };
 

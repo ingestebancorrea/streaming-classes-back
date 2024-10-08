@@ -1,3 +1,4 @@
+const errorMessages = require('../common/errorMessage');
 const Student = require('../models/Student');
 
 const createStudent = async (data) => {
@@ -14,7 +15,10 @@ const createStudent = async (data) => {
         };
     } catch (error) {
         console.error(error);
-        throw new Error('Error while saving the student');
+        res.status(500).json({
+            ok: false,
+            msg: errorMessages.SERVER.GENERAL_ERROR,
+        });
     }
 };
 

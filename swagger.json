@@ -34,12 +34,12 @@
             "type": "string",
             "description": "Nombre del usuario"
           },
-          "id_role": {
-            "type": "number",
-            "description": "ID del rol del usuario (1 para Estudiante, 2 para Moderador)"
+          "role": {
+            "type": "string",
+            "description": "Alias de rol del usuario (por ejemplo: 'EST', 'MDR')"
           }
         },
-        "required": ["username", "password", "name", "id_role"]
+        "required": ["username", "password", "name", "role"]
       },
       "CreateMessage": {
         "type": "object",

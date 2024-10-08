@@ -15,7 +15,7 @@ router.post(
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('username', 'El username es obligatorio').isEmail(),
         check('password', 'El password debe tener minimo 6 caracteres').isLength({ min: 6 }),
-        check('id_role', 'El id_rol es obligatorio y debe ser un número').isNumeric(),
+        check('role', 'El rol es obligatorio y debe ser un string').not().isEmpty().isString(),
         fieldValidator
     ],
     createUser

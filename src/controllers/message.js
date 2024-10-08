@@ -2,11 +2,11 @@ const { response } = require('express');
 const Message = require('../models/Message');
 const User = require('../models/User');
 const Role = require('../models/Role');
-const { errorMessages } = require('../common/errorMessage');
+const errorMessages = require('../common/errorMessage');
 
 const getMessagesByIdClass = async (req, res = response) => {
     const { id } = req.params;
-
+    
     try {
         const classId = parseInt(id, 10);
 
@@ -22,12 +22,14 @@ const getMessagesByIdClass = async (req, res = response) => {
                     include: [
                         {
                             model: Role,
-                            attributes: ['name'] // Incluye el nombre del rol
+                            attributes: ['name']
                         }
                     ]
                 }
-            ]
+            ],
+            order: [['date', 'ASC']]
         });
+        
     
         const formattedMessages = messages.map(message => ({
             id: message.id,

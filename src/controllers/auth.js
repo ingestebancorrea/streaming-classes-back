@@ -4,10 +4,11 @@ const User = require('../models/User');
 const { generateJWT } = require('../helpers/jwt');
 const { createStudent } = require('./student');
 const { createModerator } = require('./moderator');
-const { errorMessages } = require('../common/errorMessage');
- 
+const errorMessages = require('../common/errorMessage');
+const { getRoleByAlias } = require('./role');
+
 const createUser = async (req, res = response) => {
-    const { username, password, name, id_role } = req.body;
+    const { username, password, name, role } = req.body;
 
     try {
         let user = await User.findOne({ where: { username } });
@@ -19,16 +20,18 @@ const createUser = async (req, res = response) => {
             });
         }
 
+        const idRole = await getRoleByAlias(role);
+
         user = await User.create({
             username,
             password: bcrypt.hashSync(password, bcrypt.genSaltSync()), // Encrypt the password
-            name, 
-            id_rol: id_role 
+            name,
+            id_rol: idRole
         });
 
-        if (id_role === 1) {
+        if (idRole === 1) {
             await createStudent({ id_user: user.id });
-        } else if (id_role === 2) {
+        } else if (idRole === 2) {
             await createModerator({ id_user: user.id });
         }
 
@@ -37,9 +40,12 @@ const createUser = async (req, res = response) => {
 
         res.status(201).json({
             ok: true,
-            id: user.id,
-            name: user.name,
-            token
+            data: {
+                id: user.id,
+                name: user.name,
+                token
+            },
+            msg: "Usuario registrado exitosamente.",
         });
     } catch (error) {
         console.error(error);
@@ -69,9 +75,11 @@ const login = async (req, res = response) => {
 
         res.status(200).json({
             ok: true,
-            id: user.id,
-            name: user.name,
-            token
+            data: {
+                id: user.id,
+                name: user.name,
+                token
+            }
         });
     } catch (error) {
         console.error(error);
@@ -82,12 +90,12 @@ const login = async (req, res = response) => {
     }
 };
 
-const revalidateToken = async(req, res = response) => {
+const revalidateToken = async (req, res = response) => {
 
-    const { uid, name} = req;
+    const { uid, name } = req;
 
     //Generar nuevo JWT y retornarlo en esta petición
-    const token = await generateJWT( uid, name );
+    const token = await generateJWT(uid, name);
 
     res.json({
         ok: true,
