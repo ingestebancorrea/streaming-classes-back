@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API REST Streaming",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "LoginData": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Email del usuario"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del usuario"
+          }
+        }
+      },
+      "Registers": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Email del usuario"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del usuario"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del usuario"
+          },
+          "id_role": {
+            "type": "number",
+            "description": "ID del rol del usuario (1 para Estudiante, 2 para Moderador)"
+          }
+        },
+        "required": ["username", "password", "name", "id_role"]
+      },
+      "CreateMessage": {
+        "type": "object",
+        "properties": {
+          "id_class": {
+            "type": "integer",
+            "description": "ID de la clase a la que pertenece el mensaje"
+          },
+          "message": {
+            "type": "string",
+            "description": "Contenido del mensaje",
+            "maxLength": 250
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha y hora del mensaje"
+          }
+        },
+        "required": ["id_class", "id_user", "message", "date"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "description": "Crear un usuario",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Insertar datos del usuario",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registers"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado exitosamente."
+          },
+          "400": {
+            "description": "Error intentando crear un nuevo usuario."
+          },
+          "500": {
+            "description": "Error interno del servidor. Por favor, hable con el administrador."
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "description": "Iniciar sesion",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Solicitud de Inicio de sesion",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inicio de sesion exitoso"
+          },
+          "401": {
+            "description": "Credenciales Invalidas"
+          },
+          "500": {
+            "description": "Error interno del servidor. Por favor, hable con el administrador."
+          }
+        }
+      }
+    },
+    "/api/class": {
+      "get": {
+        "description": "Obtener clases activas",
+        "tags": ["Class"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Obtenemos exitosamente clases activas."
+          },
+          "400": {
+            "description": "Petición incorrecta.."
+          },
+          "500": {
+            "description": "Error interno del servidor. Por favor, hable con el administrador."
+          }
+        }
+      }
+    },
+    "/api/messages/class/{id}": {
+      "get": {
+        "description": "Obtener mensajes de una clase específica por ID",
+        "tags": ["Messages"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID de la clase para obtener sus mensajes",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Obtenemos exitosamente los mensajes de la clase."
+          },
+          "400": {
+            "description": "Petición incorrecta."
+          },
+          "500": {
+            "description": "Error interno del servidor. Por favor, hable con el administrador."
+          }
+        }
+      }
+    },
+    "/api/messages": {
+      "post": {
+        "description": "Guardar un mensaje",
+        "tags": ["Messages"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Guardar un mensaje nuevo",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Nuevo mensaje creado exitosamente."
+          },
+          "401": {
+            "description": "Autorización requerida."
+          },
+          "500": {
+            "description": "Error interno del servidor. Por favor, hable con el administrador."
+          }
+        }
+      }
+    }
+  }
+}
